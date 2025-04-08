@@ -111,7 +111,7 @@ def main():
         units_ultimo_mes = dados_ultimo_mes["Units_Mensais"]
         reais_ultimo_mes = units_ultimo_mes * STAKE_VALOR
         st.markdown(
-            f"<p style='font-size:16px;'>No mês {ultimo_mes}, você está com {units_ultimo_mes:.2f} units (R$ {reais_ultimo_mes:,.2f}).</p>",
+            f"<p style='font-size:16px;'>No mês {ultimo_mes}, você está com {units_ultimo_mes:.2f} unidades (R$ {reais_ultimo_mes:,.2f}).</p>",
             unsafe_allow_html=True
         )
     else:
