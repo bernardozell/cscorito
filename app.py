@@ -63,7 +63,7 @@ def main():
     # ------------------------------------------------
     st.subheader("Entradas")
     page_size = 20
-    # Para a exibição da tabela, ordenamos de forma descrescente (entradas mais recentes primeiro)
+    # Ordenamos de forma descrescente para exibir as entradas mais recentes primeiro
     df_table = df.sort_values(by="Data", ascending=False)
     total_rows = len(df_table)
     total_pages = max((total_rows + page_size - 1) // page_size, 1)
@@ -88,7 +88,7 @@ def main():
     st.write(f"Exibindo linhas {start_idx + 1} até {min(end_idx, total_rows)} de {total_rows}.")
 
     # ------------------------------------------------
-    # 4) Dados para Gráficos: Ordenar os dados em ordem cronológica (ascendente)
+    # 4) Dados para Gráficos: ordenar dados em ordem ascendente (cronológica)
     # ------------------------------------------------
     df_graph = df.sort_values(by="Data", ascending=True).copy()
     df_daily = df_graph.groupby(df_graph["Data"].dt.date)["Units"].sum().reset_index()
@@ -118,7 +118,7 @@ def main():
         st.write("Não há dados mensais para exibir.")
 
     # ------------------------------------------------
-    # 6) Gráficos Interativos com Plotly Express
+    # 6) Gráficos Interativos com Plotly Express (Dark Edition)
     # ------------------------------------------------
     # Gráfico para Evolução Acumulada em Units
     fig_units = px.line(
@@ -129,7 +129,8 @@ def main():
         markers=True,
         template="plotly_dark"
     )
-    fig_units.update_traces(line=dict(color="#39FF14", width=2), marker=dict(size=8, color="#39FF14"))
+    fig_units.update_traces(line=dict(color="#39FF14", width=2),
+                            marker=dict(size=8, color="#39FF14"))
     fig_units.update_layout(
         xaxis_title="Data",
         yaxis_title="Unidades Acumuladas",
@@ -148,7 +149,8 @@ def main():
         markers=True,
         template="plotly_dark"
     )
-    fig_reais.update_traces(line=dict(color="#39FF14", width=2), marker=dict(size=8, color="#39FF14"))
+    fig_reais.update_traces(line=dict(color="#39FF14", width=2),
+                            marker=dict(size=8, color="#39FF14"))
     fig_reais.update_layout(
         xaxis_title="Data",
         yaxis_title="Reais (R$)",
@@ -157,6 +159,19 @@ def main():
         xaxis_tickangle=-45
     )
     st.plotly_chart(fig_reais, use_container_width=True)
+
+    # ------------------------------------------------
+    # 7) Tabela: Lucro/Prejuízo Diário (em Units)
+    # ------------------------------------------------
+    st.subheader("Lucro/Prejuízo Diário (em Units)")
+    # Selecionamos apenas as colunas com o dia e o lucro/prejuízo do dia
+    df_daily_table = df_daily[["Data", "Units_Diaria"]].copy()
+    df_daily_table.columns = ["Dia", "Lucro/Prejuízo (Units)"]
+    # Formata os valores para duas casas decimais
+    df_daily_table["Lucro/Prejuízo (Units)"] = df_daily_table["Lucro/Prejuízo (Units)"].apply(lambda x: f"{x:.2f}")
+    # Converter a coluna de dia para string para exibição
+    df_daily_table["Dia"] = df_daily_table["Dia"].astype(str)
+    st.table(df_daily_table)
 
 if __name__ == "__main__":
     main()
